@@ -16,6 +16,10 @@ func check(err error) {
 		panic(err)
 	}
 }
+func worker(startY, endY, startX, endX int, data func(y, x int) uint8, out chan<- [][]uint8) {
+	result := medianFilter(startY, endY, startX, endX, data)
+	out <- result
+}
 
 // makeMatrix makes and returns a 2D slice with the given dimensions.
 func makeMatrix(height, width int) [][]uint8 {
@@ -114,9 +118,16 @@ func filter(filepathIn, filepathOut string, threads int) {
 
 	immutableData := makeImmutableMatrix(getPixelData(img))
 	var newPixelData [][]uint8
-	
+
 	if threads == 1 {
 		newPixelData = medianFilter(0, height, 0, width, immutableData)
+	} else if threads == 2 || threads == 4 || threads == 8 || threads == 16 {
+		channelsArray := make([]chan [][]uint8, threads)
+		for i := 0; i < threads; i++ {
+			channelsArray[i] = make(chan [][]uint8)
+			go worker(i*height/threads, (i+1)*height/threads, 0, width, immutableData, channelsArray[i])
+			newPixelData = append(newPixelData, <-channelsArray[i]...)
+		}
 	} else {
 		panic("TODO Implement me")
 	}
@@ -150,7 +161,7 @@ func main() {
 	flag.IntVar(
 		&threads,
 		"threads",
-		1,
+		8,
 		"Specify the number of worker threads to use.")
 
 	flag.Parse()
