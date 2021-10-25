@@ -1,6 +1,6 @@
 name,time/op (ns/op),±
-Filter/1_workers-8,4.15347E+08,9%
-Filter/2_workers-8,4.02483E+08,5%
-Filter/4_workers-8,3.95948E+08,7%
-Filter/8_workers-8,3.83235E+08,2%
-Filter/16_workers-8,3.57187E+08,8%
+Filter/1_workers-8,4.83425E+08,18%
+Filter/2_workers-8,4.34171E+08,9%
+Filter/4_workers-8,4.72073E+08,24%
+Filter/8_workers-8,4.66270E+08,12%
+Filter/16_workers-8,3.90263E+08,8%

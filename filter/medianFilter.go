@@ -161,7 +161,7 @@ func main() {
 	flag.IntVar(
 		&threads,
 		"threads",
-		8,
+		1,
 		"Specify the number of worker threads to use.")
 
 	flag.Parse()
